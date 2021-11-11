@@ -1,0 +1,112 @@
+//cria a table de Filiais
+create table Filiais (
+filiais_cod  serial primary key,
+cnpj varchar(20) not null,
+nome varchar(40) not null,
+cidade varchar(40) not null,
+estado varchar(2) not null
+);
+
+//insere os dados das filiais
+insert into Filiais(cnpj, nome, cidade, estado) VALUES ('8211081800121', 'ALFA TRANSPORTES EIRELI', 'Caçador', 'SC'),
+													   ('82110818000202', 'ALFA TRANSPORTES EIRELI', 'Curitiba', 'PR'),
+													   ('82110818000393', 'ALFA TRANSPORTES EIRELI', 'Guarulhos', 'SP'),
+													   ('82110818001608', 'ALFA TRANSPORTES EIRELI', 'Betim', 'MG'),
+													   ('82110818000806',	'ALFA TRANSPORTES EIRELI', 'Cachoeirinha','RS'),
+													   ('82110818002760', 'ALFA TRANSPORTES EIRELI', 'Tres Lagoas', 'MS'),
+													   ('82110818002094', 'ALFA TRANSPORTES EIRELI', 'Goiania', 'GO'),
+													   ('82110818002507', 'ALFA TRANSPORTES EIRELI', 'Serra', 'ES'),
+													   ('82110818002841', 'ALFA TRANSPORTES EIRELI', 'Rio de Janeiro', 'RJ');
+
+select * from Filiais;
+
+//cria a table de Departamento
+create table Departamento (
+cod_departamento serial primary key,
+nome_dep varchar(40),
+cod_filiais integer not null,
+FOREIGN KEY (cod_filiais) REFERENCES Filiais (filiais_cod)
+);
+
+//insere o código da filial para cada departamento de 1 a 9
+insert into Departamento (nome_dep, cod_filiais) VALUES ('Expedição', 1),
+										 ('SAC', 1),
+										 ('Operacional', 1),
+										 ('Administrativo', 1),
+										 ('Gerência', 1);
+
+
+//Consulta para verificar se está correta a ordem de departamento por filial				 
+select Filiais.cidade, Departamento.cod_departamento,
+Departamento.nome_dep, Filiais.filiais_cod from Departamento inner join Filiais 
+on Filiais.filiais_cod = Departamento.cod_filiais;
+
+//cria a table de colaboradores
+create table Colaboradores(
+CPF varchar(10) not null primary key,
+nome varchar(40) not null,
+genero char(1) not null,
+data_admissao date not null,
+salario numeric(10,2) not null,
+cod_departamento integer not null,
+FOREIGN KEY (cod_departamento) REFERENCES Departamento (cod_departamento)
+);
+
+//inserir dados dos colaboradores
+insert into Colaboradores VALUES 
+('123456789', 'Siclano da Silva', 'M', '12-07-2020', 2500, 1),
+('741358965', 'Beltrano da Silva', 'M', '13-07-2020', 2500, 2),
+('123987456', 'Fulano da Silva', 'M', '14-07-2020', 2500, 3),
+
+('987123456', 'Siclano de Souza', 'M', '15-07-2020', 2000, 6),
+('456123789', 'Beltrano de Souza', 'M', '16-07-2020', 2000, 7),
+('123987654', 'Fulano de Souza', 'M', '12-07-2019', 2000, 8),
+
+('456132789', 'Siclano da Silveira', 'M', '12-07-2018', 2700, 11),
+('987321465', 'Beltrano da Silveira', 'M', '12-07-2017', 2700, 12),
+('789123654', 'Fulano da Silveira', 'M', '12-08-2020', 2700, 13),
+
+('654321789', 'Arlindo', 'M', '12-03-2020', 3000, 16),
+('321123456', 'Arfeio', 'M', '12-04-2020', 3000, 17),
+('321321789', 'Lindomar', 'M', '12-05-2020', 3000, 18),
+
+('789987456', 'Allan', 'M', '12-08-2020', 3500, 21),
+('369258741', 'Eloi', 'M', '12-07-2020', 3500, 22),
+('456654123', 'Kelly', 'F', '12-07-2020', 3500, 23),
+
+('012365478', 'ABC', 'M', '01-08-2020', 3500, 26),
+('987654120', 'DEF', 'M', '02-09-2020', 3500, 27),
+('874561230', 'GHI', 'F', '12-12-2002', 3500, 28),
+
+('032145698', 'JKL', 'M', '12-08-2003', 3500, 31),
+('032145678', 'MNO', 'M', '12-07-2004', 3500, 32),
+('984532170', 'PQR', 'F', '12-07-2005', 3500, 33),
+
+('014785236', 'STU', 'M', '12-12-2020', 3500, 36),
+('632587410', 'VXW', 'M', '12-11-2020', 3500, 37),
+('256314078', 'YZA', 'F', '12-10-2020', 3500, 38),
+
+('985632410', 'BGF', 'M', '12-09-2020', 3500, 41),
+('785632140', 'KAN', 'M', '12-06-2020', 3500, 42),
+('214598783', 'NAQ', 'F', '12-03-2020', 3500, 45);
+
+//Consulta questão 7
+select Filiais.filiais_cod, Colaboradores.CPF, Colaboradores.nome, Filiais.cidade, Departamento.nome_dep 
+from Colaboradores INNER JOIN Departamento ON Colaboradores.cod_departamento = Departamento.cod_departamento
+INNER JOIN Filiais ON Filiais.filiais_cod = Departamento.cod_filiais order by Filiais.filiais_cod, Colaboradores.nome;
+
+//Consulta questão 8
+select Colaboradores.CPF, Colaboradores.nome, Colaboradores.data_admissao, Filiais.cidade
+from Colaboradores INNER JOIN Departamento ON Colaboradores.cod_departamento = Departamento.cod_departamento
+INNER JOIN Filiais ON Filiais.filiais_cod = Departamento.cod_filiais order by data_admissao LIMIT 5;
+
+//consulta questão 9
+select count(CPF), Filiais.filiais_cod, Filiais.cidade 	
+from Colaboradores INNER JOIN Departamento ON Colaboradores.cod_departamento = Departamento.cod_departamento
+INNER JOIN Filiais ON Filiais.filiais_cod = Departamento.cod_filiais group by Filiais.filiais_cod ;
+
+//consulta questão 10
+
+select Departamento.cod_departamento, Departamento.nome_dep, avg(salario) AS MEDIA from Colaboradores 
+INNER JOIN Departamento on Colaboradores.cod_departamento = Departamento.cod_departamento 
+group by Departamento.cod_departamento ;
