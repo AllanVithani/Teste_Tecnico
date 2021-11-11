@@ -23,7 +23,7 @@ def Requisicao_cnpj():
     r = r.json() 
     status = r['status']      
         
-    if status == '200':
+    if status == 'OK':
             verificacao = input("Digite 'sim' para inserir os dados no banco ou 'nao' para sair:\n")
             if verificacao == "sim":
                     cnpj_insert = r['cnpj']
