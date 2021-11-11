@@ -43,7 +43,7 @@ on Filiais.filiais_cod = Departamento.cod_filiais;
 
 //cria a table de colaboradores
 create table Colaboradores(
-CPF varchar(10) not null primary key,
+CPF varchar(11) not null primary key,
 nome varchar(40) not null,
 genero char(1) not null,
 data_admissao date not null,
